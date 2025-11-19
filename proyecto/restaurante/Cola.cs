@@ -1,84 +1,97 @@
-﻿namespace restaurante;
-
-public class Cola
-{
-using System;
+﻿using System;
 
 public class Cola<T>
 {
+    // nodo cabeza de la cola
     private Nodo<T> cabeza;
-    private Nodo<T> cola;   
-    private int tamano;     
-    
+    // nodo final de la cola
+    private Nodo<T> cola;
+    // tamaño de la cola
+    private int tamano;
+
+    // constructor
     public Cola()
     {
-        cabeza = null;
-        cola = null;
-        tamano = 0;
+        this.cabeza = null;
+        this.cola = null;
+        this.tamano = 0;
     }
 
-    // agregar un elemento al final de la cola
+    // metodo para agregar un elemento al final de la cola
     public void Agregar(T valor)
     {
         Nodo<T> nuevoNodo = new Nodo<T>(valor);
-        
+
         if (EstaVacia())
         {
-            cabeza = nuevoNodo;
-            cola = nuevoNodo;
+            this.cabeza = nuevoNodo;
+            this.cola = nuevoNodo;
         }
         else
         {
-            cola.Siguiente = nuevoNodo;
-            cola = nuevoNodo;
+            this.cola.Siguiente = nuevoNodo;
+            this.cola = nuevoNodo;
         }
-        tamano++;
+        this.tamano++;
     }
 
-    // eliminar el primer elemento de la cola
+    // metodo para eliminar el primer elemento de la cola
     public void Eliminar()
     {
         if (EstaVacia())
         {
-            throw new InvalidOperationException("La cola esta vacia.");
+            Console.WriteLine("la cola esta vacia, no se puede eliminar");
+            return;
         }
-        
-        cabeza = cabeza.Siguiente;
-        tamano--;
+
+        this.cabeza = this.cabeza.Siguiente;
+        this.tamano--;
+
+        if (this.tamano == 0)
+        {
+            this.cola = null;
+        }
     }
 
-    // retornar el primer elemento de la cola sin eliminarlo
+    // metodo para obtener el primer valor de la cola
     public T Primero()
     {
         if (EstaVacia())
         {
-            throw new InvalidOperationException("la cola esta vacia.");
+            throw new InvalidOperationException("la cola esta vacia");
         }
-        return cabeza.Valor;
+        return this.cabeza.Valor;
     }
 
-    public int Tamano()
+    // metodo para obtener el primer nodo de la cola
+    public Nodo<T> PrimeroNodo()
     {
-        return tamano;
+        return this.cabeza;
     }
 
+    // obtener el tamaño de la cola
+    public int Tamano
+    {
+        get { return this.tamano; }
+    }
+
+    // metodo para verificar si la cola esta vacia
     public bool EstaVacia()
     {
-        return tamano == 0;
+        return this.tamano == 0;
     }
 
-    // imprimir todos los elementos de la cola
+    // metodo para imprimir los elementos de la cola
     public void Imprimir()
     {
         if (EstaVacia())
         {
-            Console.WriteLine("la cola esta vacia.");
+            Console.WriteLine("la cola esta vacia");
             return;
         }
 
-        Nodo<T> actual = cabeza;
+        Nodo<T> actual = this.cabeza;
         Console.Write("cola: ");
-        
         while (actual != null)
         {
             Console.Write(actual.Valor + " ");
@@ -86,7 +99,4 @@ public class Cola<T>
         }
         Console.WriteLine();
     }
-    
-}
-
 }

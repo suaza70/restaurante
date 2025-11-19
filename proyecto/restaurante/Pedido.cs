@@ -1,63 +1,91 @@
-﻿public class Pedido
+﻿using System;
+
+public class Pedido
 {
-    private int idpedido;
+    private int idPedido;
     private Cliente cliente;
-    private ListaEnlazada<PlatoPedido> platos;
-    private decimal total;
     private DateTime fecha;
     private string estado;
+    private ListaEnlazada<PlatoPedido> platos;
 
     // constructor
-    public Pedido(int idpedido, Cliente cliente)
+    public Pedido(int idPedido, Cliente cliente)
     {
-        this.idpedido = idpedido;
+        this.idPedido = idPedido;
         this.cliente = cliente;
-        this.platos = new ListaEnlazada<PlatoPedido>();
-        this.total = 0;
         this.fecha = DateTime.Now;
-        this.estado = "PENDIENTE";
+        this.estado = "pendiente";
+        this.platos = new ListaEnlazada<PlatoPedido>();
     }
     
-    // metodo para agregar un plato al pedido
+    public int IdPedido
+    {
+        get { return this.idPedido; }
+    }
+    
+    public Cliente Cliente
+    {
+        get { return this.cliente; }
+    }
+    
+    public DateTime Fecha
+    {
+        get { return this.fecha; }
+    }
+    
+    public string Estado
+    {
+        get { return this.estado; }
+    }
+    
+    public ListaEnlazada<PlatoPedido> Platos
+    {
+        get { return this.platos; }
+    }
+    
     public void AgregarPlato(PlatoPedido plato)
     {
-        platos.Agregar(plato);
-        total += plato.PrecioUnitario * plato.Cantidad;
+        this.platos.Agregar(plato);
     }
 
-    // metodo para despachar el pedido
+    //calcular el total del pedido
+    public decimal Total
+    {
+        get
+        {
+            decimal suma = 0;
+            Nodo<PlatoPedido> actual = this.platos.Cabeza;
+            while (actual != null)
+            {
+                suma += actual.Valor.PrecioUnitario * actual.Valor.Cantidad;
+                actual = actual.Siguiente;
+            }
+            return suma;
+        }
+    }
+
+    // metodo para marcar el pedido como despachado
     public void Despachar()
     {
-        if (estado == "PENDIENTE")
-        {
-            estado = "DESPACHADO";
-        }
-        else
-        {
-            Console.WriteLine("El pedido ya fue despachado");
-        }
+        this.estado = "despachado";
     }
 
     // metodo para mostrar la informacion del pedido
     public void MostrarPedido()
     {
-        Console.WriteLine("===== INFORMACION DEL PEDIDO =====");
-        Console.WriteLine("ID Pedido: " + idpedido);
-        Console.WriteLine("Cliente: " + cliente.Nombre + " | Cedula: " + cliente.Cedula);
-        Console.WriteLine("Fecha: " + fecha);
-        Console.WriteLine("Estado: " + estado);
-        Console.WriteLine("Platos:");
-        
-        Nodo<PlatoPedido> actual = platos.Cabeza;
+        Console.WriteLine("===== informacion del pedido =====");
+        Console.WriteLine("id: " + this.idPedido);
+        Console.WriteLine("cliente: " + this.cliente.Nombre);
+        Console.WriteLine("fecha: " + this.fecha);
+        Console.WriteLine("estado: " + this.estado);
+        Console.WriteLine("total: " + this.Total);
+        Console.WriteLine("platos:");
+        Nodo<PlatoPedido> actual = this.platos.Cabeza;
         while (actual != null)
         {
-            PlatoPedido p = actual.Valor;
-            Console.WriteLine("Codigo Plato: " + p.CodigoPlato + " | Cantidad: " + p.Cantidad + " | Precio Unitario: $" + p.PrecioUnitario);
+            Console.WriteLine("codigo: " + actual.Valor.CodigoPlato + " | cantidad: " + actual.Valor.Cantidad + " | precio unitario: " + actual.Valor.PrecioUnitario);
             actual = actual.Siguiente;
         }
-
-        Console.WriteLine("Total: $" + total);
-        Console.WriteLine("===================================");
+        Console.WriteLine("==================================");
     }
-    
 }

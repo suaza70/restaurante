@@ -4,33 +4,46 @@ public class ListaEnlazada<T>
 {
     private Nodo<T> cabeza;
     private Nodo<T> ultimo;
-    private int cantidad = 0;
-
-    public Nodo<T> Cabeza => cabeza;
-    public Nodo<T> Ultimo => ultimo;
-    public int Cantidad => cantidad;
-
-    // agregar al final
-    public void Agregar(T valor)
+    private int cantidad;
+    
+    public Nodo<T> Cabeza
     {
-        var nuevo = new Nodo<T>(valor);
-        cantidad++;
-
-        if (cabeza == null)
-        {
-            cabeza = nuevo;
-            ultimo = nuevo;
-            return;
-        }
-
-        ultimo.Siguiente = nuevo;
-        ultimo = nuevo;
+        get { return this.cabeza; }
     }
 
-    // imprimir lista
+    //obtener el ultimo
+    public Nodo<T> Ultimo
+    {
+        get { return this.ultimo; }
+    }
+    //obtener la cantidad
+    public int Cantidad
+    {
+        get { return this.cantidad; }
+    }
+
+    // metodo para agregar un elemento al final de la lista
+    public void Agregar(T valor)
+    {
+        Nodo<T> nuevo = new Nodo<T>(valor);
+        if (this.cabeza == null)
+        {
+            this.cabeza = nuevo;
+            this.ultimo = nuevo;
+        }
+        else
+        {
+            this.ultimo.Siguiente = nuevo;
+            this.ultimo = nuevo;
+        }
+        this.cantidad++;
+    }
+
+    // metodo para imprimir los elementos de la lista
     public void Imprimir()
     {
-        Nodo<T> actual = cabeza;
+        Nodo<T> actual = this.cabeza;
+        Console.Write("lista: ");
         while (actual != null)
         {
             Console.Write(actual.Valor + " ");
@@ -39,76 +52,75 @@ public class ListaEnlazada<T>
         Console.WriteLine();
     }
 
-    // eliminar por posicion
+    // metodo para eliminar un elemento en una posicion
     public void EliminarPosicion(int posicion)
     {
-        if (posicion < 0 || posicion >= cantidad || cabeza == null)
-            return;
-
-        cantidad--;
+        if (posicion < 0 || posicion >= this.cantidad || this.cabeza == null) return;
 
         if (posicion == 0)
         {
-            cabeza = cabeza.Siguiente;
-            if (cabeza == null) ultimo = null; // lista quedo vacía
+            this.cabeza = this.cabeza.Siguiente;
+            if (this.cabeza == null) this.ultimo = null;
+            this.cantidad--;
             return;
         }
 
-        Nodo<T> actual = cabeza;
+        Nodo<T> actual = this.cabeza;
         for (int i = 0; i < posicion - 1; i++)
+        {
             actual = actual.Siguiente;
+        }
 
         actual.Siguiente = actual.Siguiente?.Siguiente;
-
-        if (actual.Siguiente == null)
-            ultimo = actual;
+        if (actual.Siguiente == null) this.ultimo = actual;
+        this.cantidad--;
     }
 
-    // insertar en posicion
+    // metodo para insertar un elemento en una posicion
     public void InsertarEnPosicion(T valor, int posicion)
     {
-        if (posicion < 0 || posicion > cantidad)
-            throw new ArgumentOutOfRangeException("Posicion invalida");
+        if (posicion < 0 || posicion > this.cantidad)
+            throw new ArgumentOutOfRangeException("posicion invalida");
 
-        var nuevo = new Nodo<T>(valor);
+        Nodo<T> nuevo = new Nodo<T>(valor);
 
         if (posicion == 0)
         {
-            nuevo.Siguiente = cabeza;
-            cabeza = nuevo;
-            if (cantidad == 0) ultimo = nuevo;
-            cantidad++;
+            nuevo.Siguiente = this.cabeza;
+            this.cabeza = nuevo;
+            if (this.cantidad == 0) this.ultimo = nuevo;
+            this.cantidad++;
             return;
         }
 
-        Nodo<T> actual = cabeza;
+        Nodo<T> actual = this.cabeza;
         for (int i = 0; i < posicion - 1; i++)
+        {
             actual = actual.Siguiente;
+        }
 
         nuevo.Siguiente = actual.Siguiente;
         actual.Siguiente = nuevo;
-
-        if (nuevo.Siguiente == null)
-            ultimo = nuevo;
-
-        cantidad++;
+        if (nuevo.Siguiente == null) this.ultimo = nuevo;
+        this.cantidad++;
     }
 
-    // contar elementos
+    // metodo para contar elementos
     public int Contar()
     {
-        return cantidad;
+        return this.cantidad;
     }
-    
-    // buscar elementos
+
+    // metodo para buscar un elemento segun condicion
     public T Buscar(Func<T, bool> condicion)
     {
-        Nodo<T> actual = cabeza;
+        Nodo<T> actual = this.cabeza;
         while (actual != null)
         {
             if (condicion(actual.Valor))
                 return actual.Valor;
             actual = actual.Siguiente;
         }
-        return default;
+        return default(T);
     }
+}

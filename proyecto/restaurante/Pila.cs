@@ -1,63 +1,73 @@
-﻿namespace restaurante;
-
-public class Pila
-{
-namespace Listas;
+﻿using System;
 
 public class Pila<T>
 {
-    // nodo superior de la pila
     private Nodo<T> cima;
     private int tamano;
-    public int Tamano
     
+    public int Tamano
     {
         get { return this.tamano; }
     }
 
-    // metodo para agregar un nuevo elemento a la pila
+    // metodo para agregar un elemento a la pila
     public void AgregarElemento(T valor)
     {
-        Nodo<T> nuevoNodo = new Nodo<T>(valor); 
+        Nodo<T> nuevoNodo = new Nodo<T>(valor);
 
-        if (cima == null)
+        if (this.cima == null)
         {
-            // Si la pila está vacia, el nuevo nodo sera la cima
-            cima = nuevoNodo;
+            this.cima = nuevoNodo;
         }
         else
         {
-            nuevoNodo.Siguiente = cima;
-            cima = nuevoNodo;
+            nuevoNodo.Siguiente = this.cima;
+            this.cima = nuevoNodo;
         }
-        tamano++;
+        this.tamano++;
     }
 
-    // metodo para eliminar el elemento superior de la pila
+    // metodo para eliminar el elemento en la cima de la pila
     public void EliminarElemento()
     {
-        if (cima != null)
+        if (this.cima != null)
         {
-            cima = cima.Siguiente;
-            tamano--;
+            this.cima = this.cima.Siguiente;
+            this.tamano--;
         }
         else
         {
-            Console.WriteLine("la pila está vacia, no se puede eliminar.");
+            Console.WriteLine("la pila esta vacia, no se puede eliminar");
         }
+    }
+
+    // metodo para obtener el primer elemento de la pila
+    public T Primero()
+    {
+        if (this.cima == null)
+        {
+            throw new InvalidOperationException("la pila esta vacia");
+        }
+        return this.cima.Valor;
+    }
+
+    // metodo para obtener el nodo cima
+    public Nodo<T> CimaNodo()
+    {
+        return this.cima;
     }
 
     // metodo para imprimir los elementos de la pila
     public void ImprimirPila()
     {
-        if (cima == null)
+        if (this.cima == null)
         {
             Console.WriteLine("la pila esta vacia");
             return;
         }
 
-        Nodo<T> nodoActual = cima;
-        Console.WriteLine("contenido de la pila: ");
+        Nodo<T> nodoActual = this.cima;
+        Console.WriteLine("contenido de la pila:");
         while (nodoActual != null)
         {
             Console.WriteLine("- " + nodoActual.Valor);
@@ -66,19 +76,18 @@ public class Pila<T>
         Console.WriteLine();
     }
 
-    // metodo para imprimir la pila en orden inverso
+    // metodo para imprimir la pila al reves
     public void ImprimirAlReves()
     {
         Pila<T> pilaAuxiliar = new Pila<T>();
-        
-        while (cima != null)
+
+        Nodo<T> cursor = this.cima;
+        while (cursor != null)
         {
-            pilaAuxiliar.AgregarElemento(cima.Valor);
-            EliminarElemento();
+            pilaAuxiliar.AgregarElemento(cursor.Valor);
+            cursor = cursor.Siguiente;
         }
-        
+
         pilaAuxiliar.ImprimirPila();
     }
-}
-
 }
